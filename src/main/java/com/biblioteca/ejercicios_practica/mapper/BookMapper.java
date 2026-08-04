@@ -14,5 +14,5 @@ public interface BookMapper {
     BookResponse toResponse (Book book);
 
     @Mapping(target = "id", ignore = true)
-    void updateFromRequestBook (BookRequest bookRequest, @MappingTarget Book book);
+    void updateFromRequestBook (BookRequest bookRequest, @MappingTarget Book book); // Mappeo el objeto request a book
 }

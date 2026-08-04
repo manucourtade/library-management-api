@@ -27,17 +27,17 @@ public class Book {
     private Integer stock;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_category")
+    @JoinColumn(name = "id_category") // FK
     private Category category;
 
     @ManyToMany
     @JoinTable(
-            name = "book_author",
+            name = "book_author", // Nombre de la entidad intermedia
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+    @ToString.Exclude //Exclui ToString y equals hashcode (metodos que vienen con @Data de Lombok)
+    @EqualsAndHashCode.Exclude // ya que me generaban errores
     private List<Author> authors;
 
 }
