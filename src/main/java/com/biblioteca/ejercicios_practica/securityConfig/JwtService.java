@@ -13,4 +13,6 @@ public interface JwtService {
 
     boolean isTokenExpired(String token);
     Claims extractToken (String token);
+    <T> T extractClaim(String token, String field, Class<T> type);
+
 }

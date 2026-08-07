@@ -59,6 +59,11 @@ public class JwtServiceImpl implements JwtService {
                 .getPayload();
     }
 
+    @Override
+    public <T> T extractClaim(String token, String field, Class<T> type) {
+        return extractToken(token).get(field, type);
+    }
+
 
     @Override
     public boolean isTokenExpired(String token) {
