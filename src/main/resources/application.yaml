@@ -5,11 +5,9 @@ spring:
     virtual:
       enabled: true
   datasource:
-    # Le asignamos valores por defecto si la variable de entorno no existe
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/practica-bd}
-
-    username: ${POSTGRES_USER:postgres}
-    password: ${POSTGRES_PASSWORD:password}
+    url: ${DB_URL:jdbc:postgresql://dpg-dapeh8bm8hqs739h7b00-a.oregon-postgres.render.com:5432/biblioteca_db_fwx0?sslmode=require}
+    username: ${POSTGRES_USER:biblioteca_db_fwx0_user}
+    password: ${POSTGRES_PASSWORD:Ism1ZIB6ErhP1C2LXLqjm1EmU5x1cXAw}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -20,4 +18,3 @@ spring:
 jwt:
   secret: ${JWT_SECRET:mi-clave-super-secreta-de-desarrollo-local}
   expiration: 86400000  # 24hs en milisegundos
-
