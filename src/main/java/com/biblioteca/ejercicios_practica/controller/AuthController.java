@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "https://library-mngt.vercel.app/")
 public class AuthController {
 
     private final AuthService authService;
