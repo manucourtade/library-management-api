@@ -6,8 +6,7 @@ spring:
       enabled: true
   datasource:
     # Le asignamos valores por defecto si la variable de entorno no existe
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/practica-bd}
-
+    url: jdbc:postgresql://localhost:5432/practica-bd
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:password}
     driver-class-name: org.postgresql.Driver
@@ -20,4 +19,3 @@ spring:
 jwt:
   secret: ${JWT_SECRET:mi-clave-super-secreta-de-desarrollo-local}
   expiration: 86400000  # 24hs en milisegundos
-
