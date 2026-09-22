@@ -18,3 +18,6 @@ spring:
 jwt:
   secret: ${JWT_SECRET:mi-clave-super-secreta-de-desarrollo-local}
   expiration: 86400000  # 24hs en milisegundos
+
+server:
+  port: {$PORT:8080}
