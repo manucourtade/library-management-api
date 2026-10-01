@@ -3,9 +3,11 @@ package com.biblioteca.ejercicios_practica.service.Impl;
 import com.biblioteca.ejercicios_practica.dto.CategoryRequest;
 import com.biblioteca.ejercicios_practica.dto.CategoryResponse;
 import com.biblioteca.ejercicios_practica.exception.ResourceAlreadyExistsException;
+import com.biblioteca.ejercicios_practica.exception.ResourceInUseException;
 import com.biblioteca.ejercicios_practica.exception.ResourceNotFoundException;
 import com.biblioteca.ejercicios_practica.mapper.CategoryMapper;
 import com.biblioteca.ejercicios_practica.model.Category;
+import com.biblioteca.ejercicios_practica.repository.BookRepository;
 import com.biblioteca.ejercicios_practica.repository.CategoryRepository;
 import com.biblioteca.ejercicios_practica.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryMapper categoryMapper;
     private  final CategoryRepository categoryRepository;
+    private final BookRepository bookRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -79,6 +82,9 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory (Long id) {
         if (! categoryRepository.existsById(id)) {
             throw new ResourceNotFoundException("Category", "id", id);
+        }
+        if (bookRepository.countByCategoryId(id) > 0) {
+            throw new ResourceInUseException("Category", id, "it still has books assigned");
         }
         categoryRepository.deleteById(id);
     }

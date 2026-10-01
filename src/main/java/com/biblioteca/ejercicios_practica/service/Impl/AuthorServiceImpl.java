@@ -3,6 +3,7 @@ package com.biblioteca.ejercicios_practica.service.Impl;
 import com.biblioteca.ejercicios_practica.dto.AuthorRequest;
 import com.biblioteca.ejercicios_practica.dto.AuthorResponse;
 import com.biblioteca.ejercicios_practica.exception.ResourceAlreadyExistsException;
+import com.biblioteca.ejercicios_practica.exception.ResourceInUseException;
 import com.biblioteca.ejercicios_practica.exception.ResourceNotFoundException;
 import com.biblioteca.ejercicios_practica.mapper.AuthorMapper;
 import com.biblioteca.ejercicios_practica.model.Author;
@@ -78,10 +79,13 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public void deleteAuthor(Long id) {
-        if (! authorRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Author", "id", id);
+        Author author = authorRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Author", "id", id)
+        );
+        if (author.getBooks() != null && !author.getBooks().isEmpty()) {
+            throw new ResourceInUseException("Author", id, "it still has books assigned");
         }
-        authorRepository.deleteById(id);
+        authorRepository.delete(author);
     }
 
 }

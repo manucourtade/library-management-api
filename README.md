@@ -69,24 +69,25 @@ API REST para gestión de biblioteca, desarrollada con Spring Boot. Incluye rela
 
 | Método | Endpoint | Rol requerido |
 |---|---|---|
-| GET | `/test/books` | Autenticado |
-| GET | `/test/books/{id}` | Autenticado |
-| GET | `/test/books/isbn/{isbn}` | Autenticado |
-| POST | `/test/books` | `LIBRARIAN` |
-| PUT | `/test/books/{id}` | `LIBRARIAN` |
-| PATCH | `/test/books/{id}` | `LIBRARIAN` |
-| DELETE | `/test/books/{id}` | `LIBRARIAN` |
+| GET | `/books` | Autenticado |
+| GET | `/books/{id}` | Autenticado |
+| GET | `/books/isbn/{isbn}` | Autenticado |
+| POST | `/books` | `LIBRARIAN` |
+| PUT | `/books/{id}` | `LIBRARIAN` |
+| PATCH | `/books/{id}` | `LIBRARIAN` |
+| DELETE | `/books/{id}` | `LIBRARIAN` |
+
+Cada libro devuelve su categoría (`categoryId`, `categoryName`) y sus autores (`authorIds`, `authorNames`).
 
 ### Categories
 
 | Método | Endpoint | Rol requerido |
 |---|---|---|
-| GET | `/categories` | Autenticado |
+| GET | `/categories` (incluye sus libros) | Autenticado |
 | GET | `/categories/{id}` | Autenticado |
-| GET | `/categories/all-with-books` | Autenticado |
 | POST | `/categories` | `LIBRARIAN` |
 | PUT | `/categories/{id}` | `LIBRARIAN` |
-| DELETE | `/categories/{id}` | `LIBRARIAN` |
+| DELETE | `/categories/{id}` (409 si tiene libros) | `LIBRARIAN` |
 
 ### Authors
 
@@ -96,6 +97,18 @@ API REST para gestión de biblioteca, desarrollada con Spring Boot. Incluye rela
 | GET | `/authors/{id}` | Autenticado |
 | GET | `/authors/name/{name}` | Autenticado |
 | POST | `/authors` | `LIBRARIAN` |
+| PUT | `/authors/{id}` | `LIBRARIAN` |
+| DELETE | `/authors/{id}` (409 si tiene libros) | `LIBRARIAN` |
+
+### Códigos de error
+
+| Código | Cuándo |
+|---|---|
+| 400 | Datos inválidos (el mensaje indica qué campo) |
+| 401 | Sin token, token vencido o credenciales incorrectas |
+| 403 | Autenticado pero sin el rol necesario |
+| 404 | El recurso no existe |
+| 409 | Ya existe (nombre o ISBN repetido) o no se puede borrar porque está en uso |
 
 ## 🔑 Autenticación
 

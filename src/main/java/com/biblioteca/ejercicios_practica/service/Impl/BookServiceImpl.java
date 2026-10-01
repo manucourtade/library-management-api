@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,10 +36,8 @@ public class BookServiceImpl implements BookService {
             throw new  ResourceAlreadyExistsException("Book", "isbn", bookRequest.isbn());
         }
         Book book = bookMapper.toBook(bookRequest);
-        Category category = categoryService.getCategoryEntityById(bookRequest.categoryId());
-        book.setCategory(category);
-        List<Author> authors = authorRepository.findAllById(bookRequest.authorIds());
-        book.setAuthors(authors);
+        book.setCategory(resolveCategory(bookRequest.categoryId()));
+        book.setAuthors(resolveAuthors(bookRequest.authorIds()));
         Book createdBook = bookRepository.save(book);
         log.info("Book {} created and saved in the library", createdBook.getTitle());
 
@@ -78,7 +77,12 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Book", "id", id)
         );
+        if (!bookRequest.isbn().equals(book.getIsbn()) && bookRepository.existsByIsbn(bookRequest.isbn())) {
+            throw new ResourceAlreadyExistsException("Book", "isbn", bookRequest.isbn());
+        }
         bookMapper.updateFromRequestBook(bookRequest, book);
+        book.setCategory(resolveCategory(bookRequest.categoryId()));
+        book.setAuthors(resolveAuthors(bookRequest.authorIds()));
         Book savedBook = bookRepository.save(book);
         log.info("Book updated! {} - ID: {}", book.getTitle(), book.getId());
 
@@ -106,5 +110,13 @@ public class BookServiceImpl implements BookService {
         }
         bookRepository.deleteById(id);
 
+    }
+
+    private Category resolveCategory(Long categoryId) {
+        return categoryId == null ? null : categoryService.getCategoryEntityById(categoryId);
+    }
+
+    private List<Author> resolveAuthors(List<Long> authorIds) {
+        return authorIds == null ? new ArrayList<>() : new ArrayList<>(authorRepository.findAllById(authorIds));
     }
 }
