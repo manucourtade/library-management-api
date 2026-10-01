@@ -6,6 +6,7 @@ import com.biblioteca.ejercicios_practica.dto.LoginResponse;
 import com.biblioteca.ejercicios_practica.dto.RegisterRequest;
 import com.biblioteca.ejercicios_practica.dto.RegisterResponse;
 import com.biblioteca.ejercicios_practica.exception.InvalidCredentialsException;
+import com.biblioteca.ejercicios_practica.exception.ResourceAlreadyExistsException;
 import com.biblioteca.ejercicios_practica.mapper.AuthMapper;
 import com.biblioteca.ejercicios_practica.model.User;
 import com.biblioteca.ejercicios_practica.repository.UserRepository;
@@ -29,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public RegisterResponse registerRequest (RegisterRequest registerRequest) {
         if (userRepository.existsByUsername(registerRequest.username())) {
-            throw new RuntimeException("This username is already exists! " + registerRequest.username());
+            throw new ResourceAlreadyExistsException("register", "username", registerRequest.username());
         }
         String hashEncoder = passwordEncoder.encode(registerRequest.password());
         User user = authMapper.toUser(registerRequest);
